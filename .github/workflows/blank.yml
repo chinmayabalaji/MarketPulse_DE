@@ -13,19 +13,18 @@ jobs:
 
     steps:
 
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::317135987005:role/oidc-role
-          aws-region: eu-north-1
-
-      - name: Verify AWS identity
+      - name: Check OIDC environment
         run: |
-          aws sts get-caller-identity
+          echo "ACTIONS_ID_TOKEN_REQUEST_URL exists:"
+          if [ -n "$ACTIONS_ID_TOKEN_REQUEST_URL" ]; then
+            echo "YES"
+          else
+            echo "NO"
+          fi
 
-      - name: List S3 buckets
-        run: |
-          aws s3 ls
+          echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN exists:"
+          if [ -n "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ]; then
+            echo "YES"
+          else
+            echo "NO"
+          fi
