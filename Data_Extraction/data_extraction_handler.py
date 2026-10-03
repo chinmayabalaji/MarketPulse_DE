@@ -55,7 +55,7 @@ def lambda_handler(event, context):
     try:
         req_date = event.get("date")
         logger.info("Fetching stock data...")
-        secret_name = os.environ.get("API_KEY_SECRET_NAME")
+        secret_name = os.environ.get("SECRET_NAME")
         bucket_name = os.environ.get("S3_BUCKET_NAME")
         API_KEY = get_secret(secret_name)
         data = get_stock_data(API_KEY, req_date)

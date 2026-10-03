@@ -12,4 +12,10 @@ resource "aws_lambda_function" "data_extraction_lambda_handler" {
     filename      = data.archive_file.lambda_function_zip.output_path
     source_code_hash = data.archive_file.lambda_function_zip.output_base64sha256
     timeout       = 120
+    environment {
+        variables = {
+            SECRET_NAME = aws_secretsmanager_secret.marketpulse_api_key.name,
+            S3_BUCKET_NAME = aws_s3_bucket.marketpulse_stock_data_bucket.bucket
+        }
+    }
 }
