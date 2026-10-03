@@ -1,0 +1,76 @@
+import os
+import json
+import boto3
+import logging
+import urllib3
+from datetime import datetime
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+http = urllib3.PoolManager()
+
+secrets_client = boto3.client("secretsmanager")
+s3_client = boto3.client("s3")
+
+def get_secret(secret_name):
+    try:
+        logger.info(f"Fetching secret: {secret_name}")
+        response = secrets_client.get_secret_value(SecretId=secret_name)
+        API_KEY = json.loads(response["SecretString"])["API_KEY"]
+        return API_KEY
+    except Exception as e:
+        logger.error(f"Error fetching secret: {e}")
+        raise
+
+def get_stock_data(API_KEY, req_date):
+    try:
+        logger.info("Fetching stock data...")
+        url = f"https://api.massive.com/v2/aggs/grouped/locale/us/market/stocks/{req_date}"
+        params = {
+            "adjusted": "true",
+            "apiKey": API_KEY
+        }
+
+        response = http.request("GET", url, fields=params, timeout=60)
+        if response.status != 200:
+            logger.error(f"Error fetching stock data: {response.status} - {response.data}")
+            raise ValueError(f"Failed to fetch stock data: {response.status} - {response.data}")
+        return json.loads(response.data)
+    except Exception as e:
+        logger.error(f"Error fetching stock data: {e}")
+        raise
+
+def write_to_s3(data, bucket_name):
+    try:
+        logger.info("Writing data to S3...")
+        file_name = f"us_stocks_ohlcv_{datetime.now().strftime('%Y-%m-%d')}.json"
+        s3_client.put_object(Bucket=bucket_name, Key=f"{datetime.now().strftime('%Y')}/{datetime.now().strftime('%m')}/{datetime.now().strftime('%d')}/{file_name}", Body=json.dumps(data).encode("utf-8"))
+        logger.info(f"Data written to S3 bucket: {bucket_name}, file: {file_name}")
+    except Exception as e:
+        logger.error(f"Error writing to S3 bucket: {e}")
+        raise
+
+def lambda_handler(event, context):
+    try:
+        req_date = event.get("date")
+        logger.info("Fetching stock data...")
+        secret_name = os.environ.get("SECRET_NAME")
+        bucket_name = os.environ.get("S3_BUCKET_NAME")
+        API_KEY = get_secret(secret_name)
+        data = get_stock_data(API_KEY, req_date)
+        if data:
+            write_to_s3(data, bucket_name)
+    except Exception as e:
+        logger.error(f"Error fetching stock data: {e}")
+        raise
+
+
+{
+  "errorMessage": "Failed to fetch stock data",
+  "errorType": "ValueError",
+  "requestId": "07e865ca-3135-49a3-8473-813f1eda0403",
+  "stackTrace": [
+    "  File \"/var/task/data_extraction_handler.py\", line 61, in lambda_handler\n    data = get_stock_data(API_KEY, req_date)\n",
+    "  File \"/var/task/data_extraction_handler.py\", line 37, in get_stock_data\n    raise ValueError(\"Failed to fetch stock data\")\n"
+  ]
+}
