@@ -34,7 +34,7 @@ def get_stock_data(API_KEY, req_date):
         response = http.request("GET", url, fields=params, timeout=60)
         if response.status != 200:
             logger.error(f"Error fetching stock data: {response.status} - {response.data}")
-            raise ValueError("Failed to fetch stock data")
+            raise ValueError(f"Failed to fetch stock data: {response.status} - {response.data}")
         return json.loads(response.data)
     except Exception as e:
         logger.error(f"Error fetching stock data: {e}")
@@ -43,9 +43,8 @@ def get_stock_data(API_KEY, req_date):
 def write_to_s3(data, bucket_name):
     try:
         logger.info("Writing data to S3...")
-        date = datetime.now().strftime('%Y-%m-%d')
-        file_name = f"us_stocks_ohlcv_{date}.json"
-        s3_client.put_object(Bucket=bucket_name, Key=f"{date.strftime('%Y')}/{date.strftime('%m')}/{date.strftime('%d')}/{file_name}", Body=json.dumps(data).encode("utf-8"))
+        file_name = f"us_stocks_ohlcv_{datetime.now().strftime('%Y-%m-%d')}.json"
+        s3_client.put_object(Bucket=bucket_name, Key=f"{datetime.now().strftime('%Y')}/{datetime.now().strftime('%m')}/{datetime.now().strftime('%d')}/{file_name}", Body=json.dumps(data).encode("utf-8"))
         logger.info(f"Data written to S3 bucket: {bucket_name}, file: {file_name}")
     except Exception as e:
         logger.error(f"Error writing to S3 bucket: {e}")
@@ -64,3 +63,14 @@ def lambda_handler(event, context):
     except Exception as e:
         logger.error(f"Error fetching stock data: {e}")
         raise
+
+
+{
+  "errorMessage": "Failed to fetch stock data",
+  "errorType": "ValueError",
+  "requestId": "07e865ca-3135-49a3-8473-813f1eda0403",
+  "stackTrace": [
+    "  File \"/var/task/data_extraction_handler.py\", line 61, in lambda_handler\n    data = get_stock_data(API_KEY, req_date)\n",
+    "  File \"/var/task/data_extraction_handler.py\", line 37, in get_stock_data\n    raise ValueError(\"Failed to fetch stock data\")\n"
+  ]
+}
