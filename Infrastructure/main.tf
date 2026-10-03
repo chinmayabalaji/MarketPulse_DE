@@ -9,13 +9,13 @@ terraform {
     backend "s3" {
         bucket = "terraform-amzn-infra-backend-bucket"
         key = "terraform.tfstate"
-        region = "eu-north-1"
+        region = "us-east-1"
         encrypt = true
         use_lockfile = true
     }
 }
 
 provider "aws" {
-    region = "eu-north-1"
+    region = "us-east-1"
 }
 
