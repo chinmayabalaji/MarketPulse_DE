@@ -2,11 +2,12 @@ import os
 import json
 import boto3
 import logging
-import requests
+import urllib3
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+http = urllib3.PoolManager()
 
 secrets_client = boto3.client("secretsmanager", region_name="eu-north-1")
 s3_client = boto3.client("s3", region_name = "eu-north-1")
@@ -30,11 +31,11 @@ def get_stock_data(API_KEY, req_date):
             "apiKey": API_KEY
         }
 
-        response = requests.get(url, params=params, timeout=60)
-        if response.status_code != 200:
-            logger.error(f"Error fetching stock data: {response.status_code} - {response.text}")
-            response.raise_for_status()
-        return response.json()
+        response = http.request("GET", url, fields=params, timeout=60)
+        if response.status != 200:
+            logger.error(f"Error fetching stock data: {response.status} - {response.data}")
+            raise ValueError("Failed to fetch stock data")
+        return json.loads(response.data)
     except Exception as e:
         logger.error(f"Error fetching stock data: {e}")
         raise
