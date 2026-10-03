@@ -8,7 +8,7 @@ resource "aws_iam_role" "lambda_execution_role" {
                 Effect = "Allow"
                 Sid = ""
                 Principal = {
-                    Service = "lambda.amazonaws.com"
+                    Service = ["lambda.amazonaws.com", "secretsmanager.amazonaws.com", "s3.amazonaws.com"]
                 }
             },
         ]
