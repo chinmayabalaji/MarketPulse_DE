@@ -28,7 +28,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::317135987005:role/oidc-role
-          aws-region: eu-north-1
+          aws-region: us-east-1
 
       - name: Terraform Init
         run: terraform init
