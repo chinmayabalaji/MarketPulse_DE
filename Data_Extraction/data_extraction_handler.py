@@ -16,7 +16,7 @@ def get_secret(secret_name):
     try:
         logger.info(f"Fetching secret: {secret_name}")
         response = secrets_client.get_secret_value(SecretId=secret_name)
-        API_KEY = json.loads(response["SecretString"])["MASSIVE_API_KEY"]
+        API_KEY = json.loads(response["SecretString"])["API_KEY"]
         return API_KEY
     except Exception as e:
         logger.error(f"Error fetching secret: {e}")
