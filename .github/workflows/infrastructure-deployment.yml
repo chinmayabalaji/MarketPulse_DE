@@ -12,8 +12,12 @@ permissions:
 jobs:
   aws-test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./Infrastructure
 
     steps:
+      
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -23,8 +27,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-                role-to-assume: arn:aws:iam::317135987005:role/oidc-role
-                aws-region: eu-north-1
+          role-to-assume: arn:aws:iam::317135987005:role/oidc-role
+          aws-region: eu-north-1
 
       - name: Terraform Init
         run: terraform init
