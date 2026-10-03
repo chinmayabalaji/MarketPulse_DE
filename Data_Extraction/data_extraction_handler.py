@@ -9,8 +9,8 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 http = urllib3.PoolManager()
 
-secrets_client = boto3.client("secretsmanager", region_name="eu-north-1")
-s3_client = boto3.client("s3", region_name = "eu-north-1")
+secrets_client = boto3.client("secretsmanager")
+s3_client = boto3.client("s3")
 
 def get_secret(secret_name):
     try:
