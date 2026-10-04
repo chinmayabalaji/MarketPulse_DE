@@ -7,7 +7,7 @@ resource "aws_iam_role" "lambda_execution_role" {
         Action = "sts:AssumeRole"
         Effect = "Allow"
         Principal = {
-          Service = "lambda.amazonaws.com"
+          Service = ["lambda.amazonaws.com", "scheduler.amazonaws.com"]
         }
       },
     ]
@@ -33,7 +33,7 @@ resource "aws_iam_role_policy" "lambda_data_access" {
       },
       {
         Effect   = "Allow"
-        Action   = "sqs.SendMessage"
+        Action   = "sqs:SendMessage"
         Resource = aws_sqs_queue.data_extraction_queue.arn
       }
     ]
