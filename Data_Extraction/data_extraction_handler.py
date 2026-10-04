@@ -35,7 +35,7 @@ def get_stock_data(API_KEY, req_date):
         if response.status != 200:
             logger.error(f"Error fetching stock data: {response.status} - {response.data}")
             raise ValueError(f"Failed to fetch stock data: {response.status} - {response.data}")
-        return json.loads(response.data)
+        return json.loads(response.data, indent=4)
     except Exception as e:
         logger.error(f"Error fetching stock data: {e}")
         raise
