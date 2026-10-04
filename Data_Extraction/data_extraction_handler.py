@@ -52,6 +52,7 @@ def write_to_s3(data, bucket_name):
 
 def lambda_handler(event, context):
     try:
+        logger.info(f"Received event: {json.dumps(event)}")
         req_date = event.get("date")
         logger.info("Fetching stock data...")
         secret_name = os.environ.get("SECRET_NAME")
@@ -63,14 +64,3 @@ def lambda_handler(event, context):
     except Exception as e:
         logger.error(f"Error fetching stock data: {e}")
         raise
-
-
-{
-  "errorMessage": "Failed to fetch stock data",
-  "errorType": "ValueError",
-  "requestId": "07e865ca-3135-49a3-8473-813f1eda0403",
-  "stackTrace": [
-    "  File \"/var/task/data_extraction_handler.py\", line 61, in lambda_handler\n    data = get_stock_data(API_KEY, req_date)\n",
-    "  File \"/var/task/data_extraction_handler.py\", line 37, in get_stock_data\n    raise ValueError(\"Failed to fetch stock data\")\n"
-  ]
-}
