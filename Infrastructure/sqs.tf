@@ -1,10 +1,10 @@
 resource "aws_sqs_queue" "data_extraction_dead_letter_queue" {
-  name = "data_extraction_dead_letter_queue"
+  name = "data_extraction_lambda_dead_letter_queue"
   fifo_queue = true
 }
 
 resource "aws_sqs_queue" "data_extraction_queue" {
-  name = "data_extraction_queue"
+  name = "data_extraction_lambda_queue"
   delay_seconds = 0
   visibility_timeout_seconds = 30
   fifo_queue = true
