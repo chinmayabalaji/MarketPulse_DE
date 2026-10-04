@@ -35,7 +35,8 @@ def get_stock_data(API_KEY, req_date):
         if response.status != 200:
             logger.error(f"Error fetching stock data: {response.status} - {response.data}")
             raise ValueError(f"Failed to fetch stock data: {response.status} - {response.data}")
-        return json.loads(response.data, indent=4)
+        data = json.loads(response.data, indent=4)
+        return data
     except Exception as e:
         logger.error(f"Error fetching stock data: {e}")
         raise
@@ -43,7 +44,7 @@ def get_stock_data(API_KEY, req_date):
 def write_to_s3(data, bucket_name):
     try:
         logger.info("Writing data to S3...")
-        file_name = f"us_stocks_ohlcv_{datetime.now().strftime('%Y-%m-%d')}.json"
+        file_name = f"us_stocks_ohlcv.json"
         s3_client.put_object(Bucket=bucket_name, Key=f"{datetime.now().strftime('%Y')}/{datetime.now().strftime('%m')}/{datetime.now().strftime('%d')}/{file_name}", Body=json.dumps(data).encode("utf-8"))
         logger.info(f"Data written to S3 bucket: {bucket_name}, file: {file_name}")
     except Exception as e:

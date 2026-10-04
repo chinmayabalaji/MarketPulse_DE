@@ -5,7 +5,7 @@ import logging
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
-logger.setLevel
+logger.setLevel(logging.INFO)
 
 sqs_client = boto3.client("sqs")
 
