@@ -1,5 +1,11 @@
 resource "aws_sqs_queue" "data_extraction_dead_letter_queue" {
   name = "data-extraction-lambda-dead-letter-queue"
+  redrive_allow_policy = jsonencode({
+    redrivePermission = "byQueue"
+    sourceQueueArns = [
+        aws_sqs_queue.data_extraction_queue.arn
+    ]
+  })
 }
 
 resource "aws_sqs_queue" "data_extraction_queue" {
@@ -8,15 +14,6 @@ resource "aws_sqs_queue" "data_extraction_queue" {
   visibility_timeout_seconds = 360
   redrive_policy = jsonencode({
     deadLetterTargetArn = aws_sqs_queue.data_extraction_dead_letter_queue.arn
-    maxReceiveCount     = 5
-  })
-}
-
-resource "aws_sqs_queue_redrive_allow_policy" "data_extraction_redrive_policy" {
-  queue_url = aws_sqs_queue.data_extraction_dead_letter_queue.id
-  redrive_allow_policy = jsonencode({
-    redrivePermission = "byQueue"
-    deadLetterTargetArn = aws_sqs_queue.data_extraction_queue.arn
     maxReceiveCount     = 5
   })
 }
