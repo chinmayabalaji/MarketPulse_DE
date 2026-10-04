@@ -30,8 +30,8 @@ resource "aws_lambda_function" "data_extraction_lambda_handler" {
     role          = aws_iam_role.lambda_execution_role.arn
     handler       = "data_extraction_handler.lambda_handler"
     runtime       = "python3.14"
-    filename      = data.archive_file.lambda_function_zip.output_path
-    source_code_hash = data.archive_file.lambda_function_zip.output_base64sha256
+    filename      = data.archive_file.extraction_lambda_function_zip
+    source_code_hash = data.archive_file.extraction_lambda_function_zip
     timeout       = 120
     environment {
         variables = {
