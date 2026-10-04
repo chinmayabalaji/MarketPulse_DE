@@ -1,15 +1,15 @@
-resource "aws_sqs_queue" "data_extraction_dead_letter_queue" {
+resource "aws_sqs_queue" "data-extraction-dead-letter-queue" {
   name = "data_extraction-lambda-dead-letter-queue"
   fifo_queue = true
 }
 
-resource "aws_sqs_queue" "data_extraction_queue" {
+resource "aws_sqs_queue" "data-extraction-queue" {
   name = "data-extraction-lambda-queue"
   delay_seconds = 0
   visibility_timeout_seconds = 30
   fifo_queue = true
   redrive_policy = jsonencode({
-    deadLetterTargetArn = aws_sqs_queue.data_extraction_dead_letter_queue.arn
+    deadLetterTargetArn = aws_sqs_queue.data-extraction-dead-letter-queue.arn
     maxReceiveCount     = 5
   })
 }
