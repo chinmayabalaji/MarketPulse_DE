@@ -53,7 +53,7 @@ def write_to_s3(data, bucket_name):
 def lambda_handler(event, context):
     try:
         logger.info(f"Received event: {json.dumps(event)}")
-        req_date = event.get("date")
+        req_date = event.get("date")["body"]["date"]
         logger.info("Fetching stock data...")
         secret_name = os.environ.get("SECRET_NAME")
         bucket_name = os.environ.get("S3_BUCKET_NAME")
