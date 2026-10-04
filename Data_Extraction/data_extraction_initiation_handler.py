@@ -32,7 +32,7 @@ def send_to_sqs(queue_url, message_body):
         logger.error(f"Error sending message to SQS queue: {e}")
         raise
 
-def lmbda_handler(event, context):
+def lambda_handler(event, context):
     try:
         queue_url = os.getenv("SQS_QUEUE_URL")
         date = get_date()
