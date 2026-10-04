@@ -1,7 +1,28 @@
-data "archive_file" "lambda_function_zip" {
+data "archive_file" "extraction_lambda_function_zip" {
     type = "zip"
     source_dir = "${path.module}/../Data_Extraction"
     output_path = "${path.module}/lambda_function.zip"
+}
+
+data "archive_file" "initialization_lambda_function_zip" {
+    type = "zip"
+    source_dir = "${path.module}/../Data_Extraction"
+    output_path = "${path.module}/lambda_function.zip"
+}
+
+resource "aws_lambda_function" "data_extraction_initiation_handler" {
+    function_name = "data_extraction_initiation_handler"
+    role = aws_iam_role.lambda_execution_role.arn
+    handler = "data_extraction_initiation_handler.lambda_handler"
+    runtime = "python3.14"
+    filename = data.archive_file.initialization_lambda_function_zip.output_path
+    source_code_hash = data.archive_file.initialization_lambda_function_zip.output_base64sha256
+    timeout = 120
+    environment {
+      variables = {
+        SQS_QUEUE_URL = aws_sqs_queue.data_extraction_queue.name
+      }
+    }
 }
 
 resource "aws_lambda_function" "data_extraction_lambda_handler" {
