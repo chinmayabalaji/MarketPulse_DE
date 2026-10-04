@@ -1,5 +1,5 @@
 resource "aws_sqs_queue" "data_extraction_dead_letter_queue" {
-  name = "data_extraction-lambda-dead-letter-queue"
+  name = "data-extraction-lambda-dead-letter-queue"
   fifo_queue = true
 }
 
