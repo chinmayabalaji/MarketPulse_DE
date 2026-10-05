@@ -35,7 +35,7 @@ def get_stock_data(API_KEY, req_date):
         if response.status != 200:
             logger.error(f"Error fetching stock data: {response.status} - {response.data}")
             raise ValueError(f"Failed to fetch stock data: {response.status} - {response.data}")
-        data = json.loads(response.data, indent=4)
+        data = json.loads(response.data)
         return data
     except Exception as e:
         logger.error(f"Error fetching stock data: {e}")
@@ -56,7 +56,7 @@ def lambda_handler(event, context):
         event_body = event["Records"][0]["body"]
         body = json.loads(event_body)
         req_date = body.get("scheduledDate")
-        logger.info("Fetching stock data...")
+        logger.info(f"Fetching stock data for the {req_date}")
         secret_name = os.environ.get("SECRET_NAME")
         bucket_name = os.environ.get("S3_BUCKET_NAME")
         API_KEY = get_secret(secret_name)

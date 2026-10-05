@@ -13,7 +13,8 @@ sqs_client = boto3.client("sqs")
 
 def get_date():
     try:
-        date = datetime.now().strftime('%Y-%m-%d')
+        #date = datetime.now().strftime('%Y-%m-%d')
+        date = "2026-10-01"
         logger.info(f"Current date: {date}")
         return date
     except Exception as e:
