@@ -20,7 +20,7 @@ resource "aws_lambda_function" "data_extraction_initiation_handler" {
     timeout = 120
     environment {
       variables = {
-        SQS_QUEUE_URL = aws_sqs_queue.data_extraction_queue.name
+        SQS_QUEUE_URL = aws_sqs_queue.data_extraction_queue.url
       }
     }
 }
