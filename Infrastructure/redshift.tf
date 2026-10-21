@@ -1,5 +1,5 @@
 resource "aws_redshiftserverless_namespace" "redshift_dw" {
-  namespace_name        = "Market_Pulse"
+  namespace_name        = "market-pulse"
   db_name               = "Market_Pulse"
   admin_username        = "admin"
   manage_admin_password = true
@@ -10,7 +10,7 @@ resource "aws_redshiftserverless_namespace" "redshift_dw" {
 }
 
 resource "aws_redshiftserverless_workgroup" "redshift_dw" {
-  workgroup_name      = "Market_Pulse"
+  workgroup_name      = "market-pulse"
   namespace_name      = aws_redshiftserverless_namespace.redshift_dw.namespace_name
   base_capacity       = 2
   publicly_accessible = false
