@@ -12,7 +12,7 @@ resource "aws_redshiftserverless_namespace" "redshift_dw" {
 resource "aws_redshiftserverless_workgroup" "redshift_dw" {
   workgroup_name      = "market-pulse"
   namespace_name      = aws_redshiftserverless_namespace.redshift_dw.namespace_name
-  base_capacity       = 2
+  base_capacity       = 4
   publicly_accessible = false
   port                = 5439
   subnet_ids          = data.aws_subnets.default.ids
