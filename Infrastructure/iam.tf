@@ -39,7 +39,7 @@ resource "aws_iam_role_policy" "lambda_data_access" {
       {
         Effect   = "Allow"
         Action   = "s3:ListBucket"
-        Resource = "${aws_s3_bucket.marketpulse_stock_data_bucket}"
+        Resource = aws_s3_bucket.marketpulse_stock_data_bucket.arn
       },
       {
         Effect   = "Allow"
@@ -56,6 +56,6 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
 }
 
 resource "aws_iam_role_policy_attachment" "sqs_basic_execution" {
-    role = aws_iam_role.lambda_execution_role.name
-    policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole"
+  role       = aws_iam_role.lambda_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole"
 }
